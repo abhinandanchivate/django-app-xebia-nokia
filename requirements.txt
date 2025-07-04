@@ -1,0 +1,8 @@
+django
+djangorestframework
+psycopg2-binary
+djongo
+pymongo
+djangorestframework-simplejwt
+django-environ
+drf-yasg
