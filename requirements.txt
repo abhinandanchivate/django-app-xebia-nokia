@@ -6,3 +6,4 @@ pymongo
 djangorestframework-simplejwt
 django-environ
 drf-yasg
+mongoengine

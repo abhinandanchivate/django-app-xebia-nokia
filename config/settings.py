@@ -60,7 +60,7 @@ DATABASES = {
     }
 
 }
-# mongodb configuration
+# mongodb configuration settings==> mongodb we will write it manually
 MONGODB_SETTINGS = {
     "NAME": os.getenv('MONGO_DB', 'test_db'),
     "HOST": os.getenv('MONGO_HOST', 'localhost'),

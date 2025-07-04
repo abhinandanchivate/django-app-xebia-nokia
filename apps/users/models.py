@@ -9,7 +9,7 @@ class Users(BaseEntity):
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
     is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)  # For admin access
+    
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
