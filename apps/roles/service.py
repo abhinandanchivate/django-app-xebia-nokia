@@ -62,5 +62,18 @@ class RoleService:
         role = self.get_role_by_id(role_id)
         role.delete()
         return True
+    
+    def update_role(self, role_id, data):
+        """
+        Update a role by its ID.
+        """
+        if not self.role_exists(role_id):
+            raise ValueError("Role does not exist")
+        
+        role = self.get_role_by_id(role_id)
+        for key, value in data.items():
+            setattr(role, key, value)
+        role.save()
+        return role
         
    
