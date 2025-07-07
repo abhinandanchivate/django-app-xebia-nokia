@@ -7,3 +7,4 @@ djangorestframework-simplejwt
 django-environ
 drf-yasg
 mongoengine
+django-injector
