@@ -6,6 +6,6 @@ from apps.users import router as users_router
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/roles/', include(roles_router.urls)),
-    path('api/users/', include(users_router.urls)),
+    path('api/roles/', include(roles_router.router.urls)),
+    path('api/users/', include(users_router.router.urls)),
 ]

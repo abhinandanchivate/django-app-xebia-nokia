@@ -1,5 +1,5 @@
 # services for user management
-from apps.users.models import User
+from apps.users.models import Users
 from apps.users.repository import UserRepository
 
 class UserService:

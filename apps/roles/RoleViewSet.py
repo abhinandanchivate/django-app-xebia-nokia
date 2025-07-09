@@ -5,13 +5,12 @@ from rest_framework import status
 from injector import inject
 from apps.roles.service import RoleService
 from apps.roles.serializers import RoleSerializer
+from injector import Injector
+injector = Injector()
+role_service = injector.get(RoleService)
 class RoleViewSet(ViewSet):
-    @inject
-    def __init__(self, role_service:RoleService):
-        """
-        Initialize the RoleViewSet with the RoleService.
-        """
-        self.role_service = role_service
+    
+        
     def create(self, request:Request):
         """
         Create a new role.
@@ -26,8 +25,8 @@ class RoleViewSet(ViewSet):
         data = request.data
         serializer = RoleSerializer(data=data)
         if serializer.is_valid():
-           role = self.role_service.create_role (data)
-           return Response({"role": role}, status=201)
+           role = role_service.create_role (data)
+           return Response({"role": serializer.data}, status=201)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 	
@@ -36,7 +35,7 @@ class RoleViewSet(ViewSet):
         List all roles.
         if not available then return no data found 
         """
-        roles = self.role_service.get_all_roles()
+        roles = role_service.get_all_roles()
         if roles:
             serializer = RoleSerializer(roles, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -50,7 +49,7 @@ class RoleViewSet(ViewSet):
         if not pk:
             return Response({"message": "Role ID is required"}, status=status.HTTP_400_BAD_REQUEST)
         
-        role = self.role_service.get_role_by_id(pk)
+        role = role_service.get_role_by_id(pk)
         if role:
             serializer = RoleSerializer(role)
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -63,8 +62,8 @@ class RoleViewSet(ViewSet):
         if not pk:
             return Response({"message": "Role ID is required"}, status=status.HTTP_400_BAD_REQUEST)
         
-        if self.role_service.role_exists(pk):
-            self.role_service.delete_role(pk)
+        if role_service.role_exists(pk):
+            role_service.delete_role(pk)
             return Response({"message": "Role deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
         else:
             return Response({"message": "Role not found"}, status=status.HTTP_404_NOT_FOUND)
@@ -78,9 +77,9 @@ class RoleViewSet(ViewSet):
         data = request.data
         serializer = RoleSerializer(data=data)
         if serializer.is_valid():
-            if self.role_service.role_exists(pk):
-                role = self.role_service.get_role_by_id(pk)
-                updated_role =self.role_service.update_role(pk, data)
+            if role_service.role_exists(pk):
+                role = role_service.get_role_by_id(pk)
+                updated_role =role_service.update_role(pk, data)
                 return Response({"role": updated_role}, status=status.HTTP_200_OK)
             else:
                 return Response({"message": "Role not found"}, status=status.HTTP_404_NOT_FOUND)

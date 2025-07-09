@@ -4,26 +4,30 @@
 # 2. use django injector(lib name)
 from injector import inject
 from apps.roles.repository import RoleRepository 
+from injector import Injector
+injector = Injector()
+role_repository = injector.get(RoleRepository)
+
 class RoleService:
-    @inject
+    # @inject
     # to bring the role_repository into the service class
 
-    def __init__(self, user_service, role_repository:RoleRepository):
-        self.role_repository = role_repository
+    # def __init__(self, user_service, role_repository:RoleRepository):
+    #     role_repository = role_repository
 
    
     def create_role(self,data):
         # here we need to use the repo object ? 
 
-        return self.role_repository.create_role(data)
+        return role_repository.create_role(data)
     def get_all_roles(self):
-        return self.role_repository.get_all_roles()
+        return role_repository.get_all_roles()
     def get_role_by_id(self, role_id):
-        return self.role_repository.get_role_by_id(role_id)
+        return role_repository.get_role_by_id(role_id)
     def role_exists(self, role_id):
-        return self.role_repository.role_exists(role_id)
+        return role_repository.role_exists(role_id)
     def delete_role(self, role_id):
-        return self.role_repository.delete_role(role_id)
+        return role_repository.delete_role(role_id)
     
         """
         List of business constraints : 

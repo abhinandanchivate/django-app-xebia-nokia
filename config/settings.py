@@ -1,6 +1,23 @@
 # host related details , installed app info, middleware, jwt related info, root router info , timezeone,permissions related stuff , logging related stuff, etc.
 import os 
 from pathlib import Path
+from dotenv import load_dotenv
+def reload_env(path=".env"):
+    load_dotenv(dotenv_path=path, override=True)
+def unload_env():
+    keys_to_unset = [
+        "SECRET_KEY", "POSTGRES_DB", "POSTGRES_USER", "POSTGRES_PASSWORD",
+        "POSTGRES_HOST", "POSTGRES_PORT", "MONGO_DB", "MONGO_USER",
+        "MONGO_PASSWORD", "MONGO_HOST", "MONGO_PORT", "MONGO_AUTH_DB"
+    ]
+    for key in keys_to_unset:
+        os.environ.pop(key, None)  # Remove key if exists
+    
+unload_env()
+reload_env()
+APPEND_SLASH=False
+print(">>> POSTGRES_HOST from ENV:", os.getenv("POSTGRES_HOST"))
+
 
 # base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',  # Django REST Framework
-    'corsheaders',  # CORS headers
+    #'corsheaders',  # CORS headers
     'apps.users',
     'apps.roles',
     'apps.assets'  # our custom apps for roles, account , assets
@@ -31,7 +48,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',  # CORS headers
+    #'corsheaders.middleware.CorsMiddleware',  # CORS headers
     #authentication middleware
     'django.middleware.common.CommonMiddleware',
     #CSRF : cross site request forgery
@@ -87,12 +104,12 @@ STATIC_URL = '/static/'
 # REST framework settings
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.JWTAuthentication',  # JWT authentication
+       # 'rest_framework.authentication.JWTAuthentication',  # JWT authentication
         # custom RBAC permissions
        
     ),
     'DEFAULT_PERMISSION_CLASSES': (
-         'rest_framework.permissions.Allowany', 
+      #   'rest_framework.permissions.Allowany', 
     ),
 }
 
@@ -102,19 +119,49 @@ os.makedirs(os.path.join(BASE_DIR, 'logs'), exist_ok=True)  # Ensure logs direct
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+
+    'formatters': {
+        'verbose': {
+            'format': '[{levelname}] {asctime} {module} - {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname}: {message}',
+            'style': '{',
+        },
+    },
+
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
-            'formatter': 'verbose',
-        },
-        'file': {
-            'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'logs', 'api.log'),
-            'formatter': 'verbose',
+            'formatter': 'verbose',  #
         },
     },
-}
 
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+}
+# Default primary key field type (Django 3.2+)
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Template engine for Django Admin and templates
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [BASE_DIR / "templates"],  # Optional: your custom templates
+        'APP_DIRS': True,  # Enables admin and built-in apps
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
 
 
 
